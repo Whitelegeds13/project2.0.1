@@ -1,0 +1,29 @@
+docker run -d -p 8080:80 --name frontend-container frontend-local
+cat > frontend/app/index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gestión de Tareas Académicas</title>
+</head>
+<body>
+  <h1>Curso de Matemáticas</h1>
+  <button onclick="cargarTareas()">Ver tareas</button>
+  <ul id="lista-tareas"></ul>
+
+  <script>
+    async function cargarTareas() {
+      const response = await fetch("http://backend-service:5000/api/matematicas");
+      const tareas = await response.json();
+      const lista = document.getElementById("lista-tareas");
+      lista.innerHTML = "";
+      tareas.forEach(t => {
+        const li = document.createElement("li");
+        li.textContent = t.nombre;
+        lista.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
+EOF
+
